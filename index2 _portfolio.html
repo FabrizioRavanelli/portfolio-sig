@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <!-- Icon libraries: Material Icons (free) and Font Awesome Free -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Using only Material Icons (free) -->
+  <style>
+    /* ══════════════════════════════════════
+       RESET
+    ══════════════════════════════════════ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 99px; }
+
+    /* ══════════════════════════════════════
+       THEME VARIABLES
+    ══════════════════════════════════════ */
+    :root[data-theme="light"] {
+      --bg: #F8F6F1;
+      --bg-alt: #EFECE5;
+      --text: #111111;
+      --text-soft: #555550;
+      --accent: #E8432A;
+      --accent-2: #FF8F5C;
+      --accent-glow: rgba(232,67,42,0.12);
+      --accent-soft: #FDE8E4;
+      --card: #FFFFFF;
+      --border: rgba(17,17,17,0.08);
+      --nav-bg: rgba(248,246,241,0.82);
+      --orb-a: rgba(232,67,42,0.18);
+      --orb-b: rgba(255,143,92,0.14);
+      --grain: 0.03;
+      --shadow-sm: 0 2px 16px rgba(17,17,17,0.05);
+      --shadow-md: 0 8px 40px rgba(17,17,17,0.08);
+      --timeline-line: rgba(17,17,17,0.1);
+    }
+    :root[data-theme="dark"] {
+      --bg: #0B0B0F;
+      --bg-alt: #111117;
+      --text: #EDECE8;
+      --text-soft: #8A8A8E;
+      --accent: #00DFA2;
+      --accent-2: #00B4D8;
+      --accent-glow: rgba(0,223,162,0.1);
+      --accent-soft: #0D2A22;
+      --card: #16161C;
+      --border: rgba(237,236,232,0.06);
+      --nav-bg: rgba(11,11,15,0.82);
+      --orb-a: rgba(0,223,162,0.14);
+      --orb-b: rgba(0,180,216,0.1);
+      --grain: 0.045;
+      --shadow-sm: 0 2px 16px rgba(0,0,0,0.2);
+      --shadow-md: 0 8px 40px rgba(0,0,0,0.3);
+      --timeline-line: rgba(237,236,232,0.08);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+      transition: background .5s, color .4s;
+    }
+
+    /* grain */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 9999;
+      opacity: var(--grain);
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") repeat;
+      background-size: 180px;
+    }
+
+    /* ══════════════════════════════════════
+       TYPOGRAPHY
+    ══════════════════════════════════════ */
+    h1, h2, h3 { font-family: 'Syne', sans-serif; font-weight: 700; line-height: 1.12; }
+    h2 { font-size: clamp(2rem, 5vw, 3.2rem); }
+
+    .section-tag {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem; font-weight: 800;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--accent);
+      display: inline-flex; align-items: center; gap: .5rem;
+      margin-bottom: .75rem;
+    }
+    .section-tag::before {
+      content: ''; width: 24px; height: 2px;
+      background: var(--accent); display: block;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 5s ease infinite;
+    }
+    @keyframes shimmer {
+      0%,100% { background-position: 0% center; }
+      50% { background-position: 200% center; }
+    }
+
+    /* ══════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════ */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+    section { padding: 6rem 0; position: relative; }
+    .alt-bg { background: var(--bg-alt); transition: background .5s; }
+
+    /* ══════════════════════════════════════
+       NAVIGATION
+    ══════════════════════════════════════ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: var(--nav-bg);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      transition: background .5s;
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+      height: 64px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem; color: var(--text); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a {
+      font-size: .825rem; font-weight: 500; color: var(--text-soft);
+      text-decoration: none; transition: color .3s; position: relative;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 2px; background: var(--accent); transition: width .3s;
+    }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-right { display: flex; align-items: center; gap: .5rem; }
+
+    /* Language selector */
+    .lang-bar {
+      display: flex; border-radius: 10px; overflow: hidden;
+      border: 1.5px solid var(--border); background: var(--card);
+    }
+    .lang-btn {
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: .6rem;
+      letter-spacing: .04em; padding: .4rem .55rem;
+      border: none; background: transparent; color: var(--text-soft);
+      cursor: pointer; transition: all .25s;
+    }
+    .lang-btn.active { background: var(--accent); color: #fff; }
+    .lang-btn:not(.active):hover { color: var(--accent); }
+
+    .btn-icon {
+      background: transparent; border: 1.5px solid var(--border); border-radius: 10px;
+      width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--text); transition: all .3s;
+    }
+    .btn-icon:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all .3s; }
+
+    @media(max-width:768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: absolute; top: 64px; left: 0; right: 0;
+        background: var(--nav-bg); backdrop-filter: blur(24px);
+        padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); gap: 1rem;
+      }
+    }
+
+    /* ══════════════════════════════════════
+       HERO
+    ══════════════════════════════════════ */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding-top: 64px; overflow: hidden; position: relative;
+    }
+    .orb { position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none; }
+    .orb-a { width: 550px; height: 550px; background: var(--orb-a); top: -8%; right: -8%; animation: drift 11s ease-in-out infinite; }
+    .orb-b { width: 400px; height: 400px; background: var(--orb-b); bottom: -10%; left: -6%; animation: drift 14s ease-in-out infinite reverse; }
+    @keyframes drift { 0%,100%{ transform: translate(0,0); } 50%{ transform: translate(-18px,-22px); } }
+
+    /* dot grid accent */
+    .dot-grid {
+      position: absolute; top: 10%; right: 5%; width: 200px; height: 200px;
+      background: radial-gradient(circle, var(--accent) 1px, transparent 1px);
+      background-size: 22px 22px; opacity: .12; pointer-events: none;
+    }
+
+    .hero-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 2; }
+
+    .hero-text > * {
+      opacity: 0; transform: translateY(28px);
+      animation: rise .85s ease forwards;
+    }
+    .hero-text > *:nth-child(1) { animation-delay: .15s; }
+    .hero-text > *:nth-child(2) { animation-delay: .3s; }
+    .hero-text > *:nth-child(3) { animation-delay: .45s; }
+    .hero-text > *:nth-child(4) { animation-delay: .6s; }
+    .hero-text > *:nth-child(5) { animation-delay: .75s; }
+    @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+    .hero h1 { font-size: clamp(2.6rem, 6.5vw, 4.5rem); font-weight: 800; margin-bottom: 1.25rem; }
+    .hero h1 .line { display: block; }
+    .hero-sub { font-size: 1.1rem; color: var(--text-soft); max-width: 460px; margin-bottom: 2rem; }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: .6rem;
+      padding: .9rem 2.2rem; background: var(--accent); color: #fff;
+      text-decoration: none; font-family: 'Syne', sans-serif; font-weight: 700; font-size: .85rem;
+      border-radius: 14px; transition: all .35s; letter-spacing: .02em;
+    }
+    .hero-cta:hover { transform: translateY(-3px); box-shadow: 0 12px 30px var(--accent-glow); }
+    .hero-cta svg { width: 16px; height: 16px; transition: transform .3s; }
+    .hero-cta:hover svg { transform: translateX(5px); }
+
+    /* scroll hint */
+    .scroll-hint {
+      margin-top: 3rem; display: flex; align-items: center; gap: .6rem;
+      font-size: .75rem; color: var(--text-soft); letter-spacing: .08em; text-transform: uppercase;
+      font-family: 'Syne', sans-serif; font-weight: 600;
+    }
+    .scroll-hint .line { width: 30px; height: 1.5px; background: var(--accent); animation: pulse-w 2s ease infinite; }
+    @keyframes pulse-w { 0%,100%{ width: 30px; } 50%{ width: 50px; } }
+
+    /* photo */
+    .hero-photo { position: relative; display: flex; justify-content: center; align-items: center; }
+    .hero-photo { opacity: 0; transform: scale(.92); animation: pop 1s ease forwards .4s; }
+    @keyframes pop { to { opacity: 1; transform: scale(1); } }
+
+    .photo-blob {
+      width: 320px; height: 380px; position: relative;
+      border-radius: 62% 38% 46% 54% / 60% 44% 56% 40%;
+      overflow: hidden; box-shadow: var(--shadow-md);
+      transition: border-radius .8s ease;
+    }
+    .photo-blob:hover { border-radius: 40% 60% 54% 46% / 44% 60% 40% 56%; }
+    .photo-blob img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-placeholder {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, var(--accent-soft), var(--bg-alt));
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem;
+      color: var(--text-soft); font-size: .8rem;
+    }
+    .photo-placeholder svg { width: 52px; height: 52px; opacity: .35; }
+
+    /* rotating ring */
+    .photo-ring {
+      position: absolute; width: 360px; height: 420px;
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      pointer-events: none;
+    }
+    .photo-ring svg { width: 100%; height: 100%; animation: spin 35s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* decorative number */
+    .deco-num {
+      position: absolute; top: -20px; right: -30px;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 8rem;
+      color: var(--accent); opacity: .06; line-height: 1; pointer-events: none; user-select: none;
+    }
+
+    @media(max-width:768px) {
+      .hero-grid { grid-template-columns: 1fr; text-align: center; gap: 2.5rem; }
+      .hero-sub { margin-inline: auto; }
+      .hero-photo { order: -1; }
+      .photo-blob { width: 240px; height: 290px; }
+      .photo-ring { width: 270px; height: 320px; }
+      .dot-grid { display: none; }
+      .scroll-hint { justify-content: center; }
+      .deco-num { display: none; }
+    }
+
+    /* ══════════════════════════════════════
+       MARQUEE
+    ══════════════════════════════════════ */
+    .marquee {
+      overflow: hidden; padding: 1.2rem 0;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      background: var(--bg-alt); transition: background .5s;
+    }
+    .marquee-track {
+      display: flex; width: max-content;
+      animation: scroll-left 28s linear infinite;
+    }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    .marquee-content {
+      display: flex; align-items: center; gap: 0;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: .85rem;
+      letter-spacing: .12em; text-transform: uppercase; white-space: nowrap;
+      color: var(--text-soft);
+    }
+    .marquee-content .sep {
+      display: inline-block; width: 8px; height: 8px; margin: 0 1.5rem;
+      background: var(--accent); border-radius: 50%; flex-shrink: 0;
+    }
+    @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ══════════════════════════════════════
+       STRENGTHS
+    ══════════════════════════════════════ */
+    .strengths-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2.5rem;
+    }
+    .str-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+      padding: 1.75rem; box-shadow: var(--shadow-sm);
+      transition: all .4s ease; position: relative; overflow: hidden;
+    }
+    .str-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transform: scaleX(0); transform-origin: left; transition: transform .4s ease;
+    }
+    .str-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+    .str-card:hover::before { transform: scaleX(1); }
+    .str-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--accent-glow); display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; margin-bottom: 1rem;
+    }
+    /* scale icon fonts consistently inside icon containers */
+    .str-icon .material-icons, .edu-icon .material-icons { font-size: 20px; line-height: 1; }
+    .str-icon .fa, .edu-icon .fa, .c-link-icon .fa { font-size: 18px; line-height: 1; }
+    .str-card h3 { font-size: 1.05rem; margin-bottom: .4rem; }
+    .str-card p { font-size: .85rem; color: var(--text-soft); line-height: 1.6; }
+
+    @media(max-width:768px) { .strengths-grid { grid-template-columns: 1fr; } }
+    @media(min-width:769px) and (max-width:1024px) { .strengths-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ══════════════════════════════════════
+       TIMELINE (Experience)
+    ══════════════════════════════════════ */
+    .timeline { position: relative; margin-top: 3rem; padding-left: 2.5rem; }
+    .timeline::before {
+      content: ''; position: absolute; left: 8px; top: 8px; bottom: 8px; width: 2px;
+      background: linear-gradient(to bottom, var(--accent), var(--timeline-line));
+    }
+    .tl-item { position: relative; padding-bottom: 3rem; }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-dot {
+      position: absolute; left: -2.5rem; top: 6px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--bg); border: 3px solid var(--accent);
+      z-index: 2; transition: background .3s;
+    }
+    .tl-item:hover .tl-dot { background: var(--accent); }
+    .tl-date {
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: .75rem;
+      color: var(--accent); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .35rem;
+    }
+    .tl-role { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; margin-bottom: .15rem; }
+    .tl-company { font-weight: 500; color: var(--text-soft); font-size: .9rem; margin-bottom: .5rem; }
+    .tl-desc { font-size: .88rem; color: var(--text-soft); line-height: 1.65; max-width: 560px; }
+
+    /* ══════════════════════════════════════
+       EDUCATION
+    ══════════════════════════════════════ */
+    .edu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; margin-top: 2.5rem; }
+    .edu-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+      padding: 1.75rem; box-shadow: var(--shadow-sm); transition: all .4s;
+      display: flex; gap: 1.25rem; align-items: flex-start;
+    }
+    .edu-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .edu-icon {
+      width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0;
+      background: var(--accent-glow); display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+    .edu-card h3 { font-size: 1rem; margin-bottom: .2rem; }
+    .edu-inst { font-size: .85rem; color: var(--text-soft); margin-bottom: .15rem; }
+    .edu-date { font-family: 'Syne', sans-serif; font-size: .7rem; font-weight: 700; color: var(--accent); letter-spacing: .06em; }
+
+    /* ══════════════════════════════════════
+       MANIFESTO (What I Contribute)
+    ══════════════════════════════════════ */
+    .manifesto {
+      text-align: center; padding: 7rem 0; position: relative; overflow: hidden;
+    }
+    .manifesto-inner { max-width: 780px; margin: 0 auto; position: relative; z-index: 2; }
+    .manifesto-quote {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: clamp(1.4rem, 3.5vw, 2.2rem); line-height: 1.5;
+      margin-bottom: 2rem;
+    }
+    .manifesto-quote .hl { color: var(--accent); }
+    .manifesto-quote .hl-underline {
+      text-decoration: underline;
+      text-decoration-color: var(--accent);
+      text-underline-offset: 4px;
+      text-decoration-thickness: 3px;
+    }
+    /* decorative quotes */
+    .manifesto-inner::before {
+      content: '\201C'; position: absolute; top: -50px; left: -20px;
+      font-family: 'Syne', sans-serif; font-size: 10rem; line-height: 1;
+      color: var(--accent); opacity: .08; pointer-events: none;
+    }
+
+    .manifesto-pillars { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: .5rem; }
+    .pillar {
+      display: flex; align-items: center; gap: .5rem;
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: .8rem;
+      letter-spacing: .05em; color: var(--text-soft);
+    }
+    .pillar .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+    /* ══════════════════════════════════════
+       CONTACT
+    ══════════════════════════════════════ */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 2.5rem; }
+    .contact-info p { color: var(--text-soft); margin-bottom: 1.5rem; font-size: 1.05rem; }
+    .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+    .c-link {
+      display: flex; align-items: center; gap: .75rem;
+      color: var(--text); text-decoration: none; font-weight: 500; transition: color .3s;
+    }
+    .c-link:hover { color: var(--accent); }
+    .c-link-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--card); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
+      transition: all .3s;
+    }
+    .c-link:hover .c-link-icon { background: var(--accent-glow); border-color: var(--accent); }
+
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-form input, .contact-form textarea {
+      font-family: 'DM Sans', sans-serif; font-size: .95rem;
+      padding: .9rem 1.15rem; border-radius: 14px;
+      border: 1.5px solid var(--border); background: var(--card);
+      color: var(--text); outline: none; transition: border-color .3s, box-shadow .3s;
+    }
+    .contact-form input:focus, .contact-form textarea:focus {
+      border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .contact-form textarea { resize: vertical; min-height: 120px; }
+    .btn-send {
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: .85rem;
+      padding: .9rem 2.2rem; border: none; border-radius: 14px;
+      background: var(--accent); color: #fff; cursor: pointer;
+      transition: all .35s; align-self: flex-start; letter-spacing: .02em;
+    }
+    .btn-send:hover { transform: translateY(-3px); box-shadow: 0 12px 30px var(--accent-glow); }
+
+    @media(max-width:768px) { .contact-grid { grid-template-columns: 1fr; } }
+
+    /* ══════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════ */
+    footer {
+      text-align: center; padding: 3rem 2rem; font-size: .8rem;
+      color: var(--text-soft); border-top: 1px solid var(--border);
+    }
+    footer .acc { color: var(--accent); }
+
+    /* ══════════════════════════════════════
+       ANIMATIONS
+    ══════════════════════════════════════ */
+    .rv { opacity: 0; transform: translateY(32px); transition: opacity .7s ease, transform .7s ease; }
+    .rv.vis { opacity: 1; transform: translateY(0); }
+    .rv-d1 { transition-delay: .1s; } .rv-d2 { transition-delay: .2s; }
+    .rv-d3 { transition-delay: .3s; } .rv-d4 { transition-delay: .4s; }
+    .rv-d5 { transition-delay: .5s; } .rv-d6 { transition-delay: .6s; }
+
+    /* scroll-to-top button */
+    #scrollTopBtn {
+      position: fixed;
+      right: 20px;
+      bottom: 22px;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      color: var(--text);
+      cursor: pointer;
+      transition: opacity .25s ease, transform .25s ease, background .25s;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      z-index: 1200;
+    }
+    #scrollTopBtn.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    #scrollTopBtn:hover { background: var(--accent-glow); color: var(--accent); border-color: var(--accent); }
+    #scrollTopBtn .material-icons { font-size: 20px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">sig<span>.</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#strengths" data-i18n="nav.str">Puntos fuertes</a></li>
+      <li><a href="#experience" data-i18n="nav.exp">Experiencia</a></li>
+      <li><a href="#education" data-i18n="nav.edu">Estudios</a></li>
+      <li><a href="#value" data-i18n="nav.val">Mi aporte</a></li>
+      <li><a href="#contact" data-i18n="nav.cta">Contacto</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-bar" id="langBar">
+        <button class="lang-btn active" data-lang="es">ES</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="fr">FR</button>
+        <button class="lang-btn" data-lang="pt">PT</button>
+        <button class="lang-btn" data-lang="de">DE</button>
+      </div>
+      <button class="btn-icon" id="themeToggle" aria-label="Toggle theme"></button>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="dot-grid"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <span class="section-tag" data-i18n="hero.tag">Bienvenido a mi portfolio</span>
+        <h1>
+          <span class="line" data-i18n="hero.hi">Hola, soy</span>
+          <span class="line gradient-text" data-i18n="hero.name">Tu Nombre</span>
+        </h1>
+        <p class="hero-sub" data-i18n="hero.sub">Profesional apasionado, con mentalidad de crecimiento continuo y ganas de aportar valor real a cada proyecto.</p>
+        <a href="#contact" class="hero-cta">
+          <span data-i18n="hero.cta">Contactar</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <div class="scroll-hint">
+          <div class="line"></div>
+          <span data-i18n="hero.scroll">Scroll para descubrir</span>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <div class="deco-num">01</div>
+        <div class="photo-ring">
+          <svg viewBox="0 0 360 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="180" cy="210" rx="170" ry="200" stroke="currentColor" stroke-width="1" stroke-dasharray="8 8" opacity=".15"/>
+          </svg>
+        </div>
+        <div class="photo-blob">
+          <!-- Reemplaza con: <img src="tu-foto.jpg" alt="Tu Nombre"> -->
+          <div class="photo-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span data-i18n="hero.photo">Tu foto aqui</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MARQUEE ═══ -->
+<div class="marquee">
+  <div class="marquee-track">
+    <div class="marquee-content" id="marqueeA"></div>
+    <div class="marquee-content" id="marqueeB"></div>
+  </div>
+</div>
+
+<!-- ═══ STRENGTHS ═══ -->
+<section id="strengths">
+  <div class="container">
+    <span class="section-tag rv" data-i18n="str.tag">Puntos fuertes</span>
+    <h2 class="rv rv-d1" data-i18n="str.title">Lo que me define</h2>
+    <div class="strengths-grid">
+      <div class="str-card rv rv-d1">
+        <div class="str-icon"><span class="material-icons" aria-hidden="true">psychology</span></div>
+        <h3 data-i18n="str.1.t">Resolución de problemas</h3>
+        <p data-i18n="str.1.d">Analizo, descompongo y encuentro soluciones eficientes. Cada obstáculo es un rompecabezas que disfruto resolver.</p>
+      </div>
+      <div class="str-card rv rv-d2">
+        <div class="str-icon"><span class="material-icons" aria-hidden="true">trending_up</span></div>
+        <h3 data-i18n="str.2.t">Aprendizaje continuo</h3>
+        <p data-i18n="str.2.d">Nunca dejo de aprender. Me mantengo al día con las últimas tecnologías y busco mejorar constantemente.</p>
+      </div>
+      <div class="str-card rv rv-d3">
+        <div class="str-icon"><span class="material-icons" aria-hidden="true">group</span></div>
+        <h3 data-i18n="str.3.t">Trabajo en equipo</h3>
+        <p data-i18n="str.3.d">Comunico con claridad, escucho activamente y creo que los mejores resultados nacen de la colaboración.</p>
+      </div>
+      <div class="str-card rv rv-d4">
+        <div class="str-icon"><span class="material-icons" aria-hidden="true">search</span></div>
+        <h3 data-i18n="str.4.t">Atención al detalle</h3>
+        <p data-i18n="str.4.d">La calidad está en los detalles. Cuido cada aspecto de mi trabajo para entregar resultados impecables.</p>
+      </div>
+      <div class="str-card rv rv-d5">
+        <div class="str-icon"><span class="material-icons" aria-hidden="true">emoji_objects</span></div>
+        <h3 data-i18n="str.5.t">Pensamiento creativo</h3>
+        <p data-i18n="str.5.d">Aporto ideas frescas y enfoques innovadores. No me conformo con lo convencional si hay una mejor manera.</p>
+      </div>
+      <div class="str-card rv rv-d6">
+        <div class="str-icon"><span class="material-icons" aria-hidden="true">autorenew</span></div>
+        <h3 data-i18n="str.6.t">Adaptabilidad</h3>
+        <p data-i18n="str.6.d">Me desenvuelvo con soltura en entornos cambiantes. Abrazo los nuevos retos con entusiasmo y flexibilidad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ EXPERIENCE ═══ -->
+<section id="experience" class="alt-bg">
+  <div class="container">
+    <span class="section-tag rv" data-i18n="exp.tag">Trayectoria</span>
+    <h2 class="rv rv-d1" data-i18n="exp.title">Mi recorrido profesional</h2>
+    <div class="timeline">
+      <div class="tl-item rv rv-d1">
+        <div class="tl-dot"></div>
+        <div class="tl-date" data-i18n="exp.1.date">2023 — Presente</div>
+        <div class="tl-role" data-i18n="exp.1.role">Tu Cargo Actual</div>
+        <div class="tl-company" data-i18n="exp.1.company">Nombre de Empresa</div>
+        <p class="tl-desc" data-i18n="exp.1.desc">Describe aquí tus responsabilidades principales y logros más destacados en este puesto.</p>
+      </div>
+      <div class="tl-item rv rv-d2">
+        <div class="tl-dot"></div>
+        <div class="tl-date" data-i18n="exp.2.date">2021 — 2023</div>
+        <div class="tl-role" data-i18n="exp.2.role">Tu Cargo Anterior</div>
+        <div class="tl-company" data-i18n="exp.2.company">Otra Empresa</div>
+        <p class="tl-desc" data-i18n="exp.2.desc">Describe aquí las tareas que realizaste y el impacto que tuviste en esta posición.</p>
+      </div>
+      <div class="tl-item rv rv-d3">
+        <div class="tl-dot"></div>
+        <div class="tl-date" data-i18n="exp.3.date">2019 — 2021</div>
+        <div class="tl-role" data-i18n="exp.3.role">Tu Primer Cargo</div>
+        <div class="tl-company" data-i18n="exp.3.company">Primera Empresa</div>
+        <p class="tl-desc" data-i18n="exp.3.desc">Describe aquí cómo comenzó tu carrera y qué aprendizajes clave obtuviste.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ EDUCATION ═══ -->
+<section id="education">
+  <div class="container">
+    <span class="section-tag rv" data-i18n="edu.tag">Formación</span>
+    <h2 class="rv rv-d1" data-i18n="edu.title">Estudios y certificaciones</h2>
+    <div class="edu-grid">
+      <div class="edu-card rv rv-d1">
+        <div class="edu-icon"><span class="material-icons" aria-hidden="true">school</span></div>
+        <div>
+          <h3 data-i18n="edu.1.t">Tu Título Universitario</h3>
+          <div class="edu-inst" data-i18n="edu.1.inst">Universidad Ejemplo</div>
+          <div class="edu-date" data-i18n="edu.1.date">2015 — 2019</div>
+        </div>
+      </div>
+      <div class="edu-card rv rv-d2">
+        <div class="edu-icon"><span class="material-icons" aria-hidden="true">menu_book</span></div>
+        <div>
+          <h3 data-i18n="edu.2.t">Certificación Relevante</h3>
+          <div class="edu-inst" data-i18n="edu.2.inst">Plataforma / Institución</div>
+          <div class="edu-date" data-i18n="edu.2.date">2020</div>
+        </div>
+      </div>
+      <div class="edu-card rv rv-d3">
+        <div class="edu-icon"><span class="material-icons" aria-hidden="true">military_tech</span></div>
+        <div>
+          <h3 data-i18n="edu.3.t">Otro Curso o Formación</h3>
+          <div class="edu-inst" data-i18n="edu.3.inst">Institución</div>
+          <div class="edu-date" data-i18n="edu.3.date">2021</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MANIFESTO ═══ -->
+<section id="value" class="manifesto alt-bg">
+  <div class="container">
+    <div class="manifesto-inner rv">
+      <span class="section-tag" data-i18n="val.tag">Lo que puedo aportar</span>
+      <p class="manifesto-quote" data-i18n="val.quote">
+        Aporto <span class="hl">dedicación</span>, <span class="hl">visión creativa</span> y un compromiso real con los resultados. No busco solo cumplir — busco <span class="hl-underline">entender el porqué</span>, sumar al equipo y crecer con cada desafío.
+      </p>
+      <div class="manifesto-pillars">
+        <div class="pillar"><div class="dot"></div><span data-i18n="val.p1">Compromiso</span></div>
+        <div class="pillar"><div class="dot"></div><span data-i18n="val.p2">Proactividad</span></div>
+        <div class="pillar"><div class="dot"></div><span data-i18n="val.p3">Crecimiento</span></div>
+        <div class="pillar"><div class="dot"></div><span data-i18n="val.p4">Calidad</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section id="contact">
+  <div class="container">
+    <span class="section-tag rv" data-i18n="cta.tag">Contacto</span>
+    <h2 class="rv rv-d1" data-i18n="cta.title">¿Hablamos?</h2>
+    <div class="contact-grid">
+      <div class="rv rv-d2">
+        <p class="contact-info" data-i18n="cta.desc">Estoy buscando nuevas oportunidades y me encantaría escuchar tu propuesta. No dudes en escribirme.</p>
+        <div class="contact-links">
+          <a href="mailto:tu@email.com" class="c-link"><div class="c-link-icon"><span class="material-icons" aria-hidden="true">email</span></div><span>tu@email.com</span></a>
+          <a href="#" class="c-link"><div class="c-link-icon"><span class="material-icons" aria-hidden="true">work</span></div><span>LinkedIn</span></a>
+          <a href="#" class="c-link"><div class="c-link-icon"><span class="material-icons" aria-hidden="true">code</span></div><span>GitHub</span></a>
+        </div>
+      </div>
+      <form class="contact-form rv rv-d3" onsubmit="event.preventDefault()">
+        <input type="text" data-i18n-ph="cta.fname" placeholder="Tu nombre" required>
+        <input type="email" data-i18n-ph="cta.femail" placeholder="Tu email" required>
+        <textarea data-i18n-ph="cta.fmsg" placeholder="Tu mensaje..." required></textarea>
+        <button type="submit" class="btn-send" data-i18n="cta.send">Enviar mensaje</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 <span class="acc">sig.</span> — <span data-i18n="footer">Hecho con dedicación</span></p>
+</footer>
+
+<!-- Scroll to top button -->
+<button id="scrollTopBtn" aria-label="Volver arriba" title="Volver arriba">
+  <span class="material-icons" aria-hidden="true">arrow_upward</span>
+</button>
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
+<script>
+// ── Translations ──
+const T = {
+es: {
+  'nav.str':'Puntos fuertes','nav.exp':'Experiencia','nav.edu':'Estudios','nav.val':'Mi aporte','nav.cta':'Contacto',
+  'hero.tag':'Bienvenido a mi portfolio','hero.hi':'Hola, soy','hero.name':'Tu Nombre',
+  'hero.sub':'Profesional apasionado, con mentalidad de crecimiento continuo y ganas de aportar valor real a cada proyecto.',
+  'hero.cta':'Contactar','hero.scroll':'Scroll para descubrir','hero.photo':'Tu foto aquí',
+  'str.tag':'Puntos fuertes','str.title':'Lo que me define',
+  'str.1.t':'Resolución de problemas','str.1.d':'Analizo, descompongo y encuentro soluciones eficientes. Cada obstáculo es un rompecabezas que disfruto resolver.',
+  'str.2.t':'Aprendizaje continuo','str.2.d':'Nunca dejo de aprender. Me mantengo al día con las últimas tecnologías y busco mejorar constantemente.',
+  'str.3.t':'Trabajo en equipo','str.3.d':'Comunico con claridad, escucho activamente y creo que los mejores resultados nacen de la colaboración.',
+  'str.4.t':'Atención al detalle','str.4.d':'La calidad está en los detalles. Cuido cada aspecto de mi trabajo para entregar resultados impecables.',
+  'str.5.t':'Pensamiento creativo','str.5.d':'Aporto ideas frescas y enfoques innovadores. No me conformo con lo convencional si hay una mejor manera.',
+  'str.6.t':'Adaptabilidad','str.6.d':'Me desenvuelvo con soltura en entornos cambiantes. Abrazo los nuevos retos con entusiasmo y flexibilidad.',
+  'exp.tag':'Trayectoria','exp.title':'Mi recorrido profesional',
+  'exp.1.date':'2023 — Presente','exp.1.role':'Tu Cargo Actual','exp.1.company':'Nombre de Empresa','exp.1.desc':'Describe aquí tus responsabilidades principales y logros más destacados en este puesto.',
+  'exp.2.date':'2021 — 2023','exp.2.role':'Tu Cargo Anterior','exp.2.company':'Otra Empresa','exp.2.desc':'Describe aquí las tareas que realizaste y el impacto que tuviste en esta posición.',
+  'exp.3.date':'2019 — 2021','exp.3.role':'Tu Primer Cargo','exp.3.company':'Primera Empresa','exp.3.desc':'Describe aquí cómo comenzó tu carrera y qué aprendizajes clave obtuviste.',
+  'edu.tag':'Formación','edu.title':'Estudios y certificaciones',
+  'edu.1.t':'Tu Título Universitario','edu.1.inst':'Universidad Ejemplo','edu.1.date':'2015 — 2019',
+  'edu.2.t':'Certificación Relevante','edu.2.inst':'Plataforma / Institución','edu.2.date':'2020',
+  'edu.3.t':'Otro Curso o Formación','edu.3.inst':'Institución','edu.3.date':'2021',
+  'val.tag':'Lo que puedo aportar',
+  'val.quote':'Aporto <span class="hl">dedicación</span>, <span class="hl">visión creativa</span> y un compromiso real con los resultados. No busco solo cumplir — busco <span class="hl-underline">entender el porqué</span>, sumar al equipo y crecer con cada desafío.',
+  'val.p1':'Compromiso','val.p2':'Proactividad','val.p3':'Crecimiento','val.p4':'Calidad',
+  'cta.tag':'Contacto','cta.title':'¿Hablamos?',
+  'cta.desc':'Estoy buscando nuevas oportunidades y me encantaría escuchar tu propuesta. No dudes en escribirme.',
+  'cta.fname':'Tu nombre','cta.femail':'Tu email','cta.fmsg':'Tu mensaje...','cta.send':'Enviar mensaje',
+  'footer':'Hecho con dedicación',
+  'marquee':'CREATIVO•RESOLUTIVO•EQUIPO•DETALLISTA•INNOVADOR•ADAPTABLE•PROACTIVO•AUTODIDACTA'
+},
+en: {
+  'nav.str':'Strengths','nav.exp':'Experience','nav.edu':'Education','nav.val':'My value','nav.cta':'Contact',
+  'hero.tag':'Welcome to my portfolio','hero.hi':"Hi, I'm",'hero.name':'Your Name',
+  'hero.sub':'Passionate professional with a growth mindset and a drive to bring real value to every project.',
+  'hero.cta':"Let's talk",'hero.scroll':'Scroll to discover','hero.photo':'Your photo here',
+  'str.tag':'Strengths','str.title':'What defines me',
+  'str.1.t':'Problem solving','str.1.d':'I analyse, break down and find efficient solutions. Every obstacle is a puzzle I enjoy solving.',
+  'str.2.t':'Continuous learning','str.2.d':'I never stop learning. I stay up to date with the latest technologies and constantly seek improvement.',
+  'str.3.t':'Teamwork','str.3.d':'I communicate clearly, listen actively and believe the best results come from collaboration.',
+  'str.4.t':'Attention to detail','str.4.d':'Quality is in the details. I care about every aspect of my work to deliver impeccable results.',
+  'str.5.t':'Creative thinking','str.5.d':'I bring fresh ideas and innovative approaches. I don\'t settle for the conventional if there\'s a better way.',
+  'str.6.t':'Adaptability','str.6.d':'I thrive in changing environments. I embrace new challenges with enthusiasm and flexibility.',
+  'exp.tag':'Career path','exp.title':'My professional journey',
+  'exp.1.date':'2023 — Present','exp.1.role':'Your Current Role','exp.1.company':'Company Name','exp.1.desc':'Describe your main responsibilities and most notable achievements in this position.',
+  'exp.2.date':'2021 — 2023','exp.2.role':'Your Previous Role','exp.2.company':'Another Company','exp.2.desc':'Describe the tasks you performed and the impact you had in this position.',
+  'exp.3.date':'2019 — 2021','exp.3.role':'Your First Role','exp.3.company':'First Company','exp.3.desc':'Describe how your career began and the key lessons you learned.',
+  'edu.tag':'Education','edu.title':'Studies & certifications',
+  'edu.1.t':'Your University Degree','edu.1.inst':'Example University','edu.1.date':'2015 — 2019',
+  'edu.2.t':'Relevant Certification','edu.2.inst':'Platform / Institution','edu.2.date':'2020',
+  'edu.3.t':'Other Course or Training','edu.3.inst':'Institution','edu.3.date':'2021',
+  'val.tag':'What I can contribute',
+  'val.quote':'I bring <span class="hl">dedication</span>, <span class="hl">creative vision</span> and a real commitment to results. I don\'t just aim to deliver — I seek to <span class="hl-underline">understand the why</span>, add to the team and grow with every challenge.',
+  'val.p1':'Commitment','val.p2':'Proactivity','val.p3':'Growth','val.p4':'Quality',
+  'cta.tag':'Contact','cta.title':'Shall we talk?',
+  'cta.desc':"I'm looking for new opportunities and would love to hear your proposal. Don't hesitate to reach out.",
+  'cta.fname':'Your name','cta.femail':'Your email','cta.fmsg':'Your message...','cta.send':'Send message',
+  'footer':'Made with dedication',
+  'marquee':'CREATIVE•PROBLEM-SOLVER•TEAMWORK•DETAIL-ORIENTED•INNOVATIVE•ADAPTABLE•PROACTIVE•SELF-TAUGHT'
+},
+fr: {
+  'nav.str':'Points forts','nav.exp':'Expérience','nav.edu':'Formation','nav.val':'Mon apport','nav.cta':'Contact',
+  'hero.tag':'Bienvenue sur mon portfolio','hero.hi':'Bonjour, je suis','hero.name':'Votre Nom',
+  'hero.sub':'Professionnel passionné, avec un esprit de croissance continue et l\'envie d\'apporter une vraie valeur à chaque projet.',
+  'hero.cta':'Me contacter','hero.scroll':'Défiler pour découvrir','hero.photo':'Votre photo ici',
+  'str.tag':'Points forts','str.title':'Ce qui me définit',
+  'str.1.t':'Résolution de problèmes','str.1.d':'J\'analyse, je décompose et je trouve des solutions efficaces. Chaque obstacle est un puzzle que j\'aime résoudre.',
+  'str.2.t':'Apprentissage continu','str.2.d':'Je n\'arrête jamais d\'apprendre. Je me tiens au courant des dernières technologies et cherche à m\'améliorer constamment.',
+  'str.3.t':'Travail d\'équipe','str.3.d':'Je communique clairement, j\'écoute activement et je crois que les meilleurs résultats naissent de la collaboration.',
+  'str.4.t':'Souci du détail','str.4.d':'La qualité est dans les détails. Je soigne chaque aspect de mon travail pour livrer des résultats impeccables.',
+  'str.5.t':'Pensée créative','str.5.d':'J\'apporte des idées fraîches et des approches innovantes. Je ne me contente pas du conventionnel s\'il y a une meilleure voie.',
+  'str.6.t':'Adaptabilité','str.6.d':'Je m\'épanouis dans les environnements changeants. J\'accueille les nouveaux défis avec enthousiasme et flexibilité.',
+  'exp.tag':'Parcours','exp.title':'Mon parcours professionnel',
+  'exp.1.date':'2023 — Présent','exp.1.role':'Votre Poste Actuel','exp.1.company':'Nom de l\'Entreprise','exp.1.desc':'Décrivez ici vos responsabilités principales et vos réalisations les plus marquantes à ce poste.',
+  'exp.2.date':'2021 — 2023','exp.2.role':'Votre Poste Précédent','exp.2.company':'Autre Entreprise','exp.2.desc':'Décrivez les tâches réalisées et l\'impact que vous avez eu dans ce poste.',
+  'exp.3.date':'2019 — 2021','exp.3.role':'Votre Premier Poste','exp.3.company':'Première Entreprise','exp.3.desc':'Décrivez comment votre carrière a commencé et les apprentissages clés obtenus.',
+  'edu.tag':'Formation','edu.title':'Études et certifications',
+  'edu.1.t':'Votre Diplôme Universitaire','edu.1.inst':'Université Exemple','edu.1.date':'2015 — 2019',
+  'edu.2.t':'Certification Pertinente','edu.2.inst':'Plateforme / Institution','edu.2.date':'2020',
+  'edu.3.t':'Autre Cours ou Formation','edu.3.inst':'Institution','edu.3.date':'2021',
+  'val.tag':'Ce que je peux apporter',
+  'val.quote':'J\'apporte du <span class="hl">dévouement</span>, une <span class="hl">vision créative</span> et un engagement réel envers les résultats. Je ne cherche pas juste à livrer — je cherche à <span class="hl-underline">comprendre le pourquoi</span>, enrichir l\'équipe et grandir avec chaque défi.',
+  'val.p1':'Engagement','val.p2':'Proactivité','val.p3':'Croissance','val.p4':'Qualité',
+  'cta.tag':'Contact','cta.title':'On en parle ?',
+  'cta.desc':'Je suis à la recherche de nouvelles opportunités et j\'aimerais beaucoup entendre votre proposition. N\'hésitez pas à me contacter.',
+  'cta.fname':'Votre nom','cta.femail':'Votre email','cta.fmsg':'Votre message...','cta.send':'Envoyer le message',
+  'footer':'Fait avec dévouement',
+  'marquee':'CRÉATIF•RÉSOLUTIF•ÉQUIPE•MÉTICULEUX•INNOVANT•ADAPTABLE•PROACTIF•AUTODIDACTE'
+},
+pt: {
+  'nav.str':'Pontos fortes','nav.exp':'Experiência','nav.edu':'Formação','nav.val':'Meu valor','nav.cta':'Contato',
+  'hero.tag':'Bem-vindo ao meu portfólio','hero.hi':'Olá, eu sou','hero.name':'Seu Nome',
+  'hero.sub':'Profissional apaixonado, com mentalidade de crescimento contínuo e vontade de agregar valor real a cada projeto.',
+  'hero.cta':'Fale comigo','hero.scroll':'Role para descobrir','hero.photo':'Sua foto aqui',
+  'str.tag':'Pontos fortes','str.title':'O que me define',
+  'str.1.t':'Resolução de problemas','str.1.d':'Analiso, decomponho e encontro soluções eficientes. Cada obstáculo é um quebra-cabeça que gosto de resolver.',
+  'str.2.t':'Aprendizado contínuo','str.2.d':'Nunca paro de aprender. Mantenho-me atualizado com as últimas tecnologias e busco melhorar constantemente.',
+  'str.3.t':'Trabalho em equipe','str.3.d':'Comunico com clareza, escuto ativamente e acredito que os melhores resultados nascem da colaboração.',
+  'str.4.t':'Atenção aos detalhes','str.4.d':'A qualidade está nos detalhes. Cuido de cada aspecto do meu trabalho para entregar resultados impecáveis.',
+  'str.5.t':'Pensamento criativo','str.5.d':'Trago ideias frescas e abordagens inovadoras. Não me contento com o convencional se há uma maneira melhor.',
+  'str.6.t':'Adaptabilidade','str.6.d':'Desenvolvo-me com facilidade em ambientes em mudança. Abraço novos desafios com entusiasmo e flexibilidade.',
+  'exp.tag':'Trajetória','exp.title':'Meu percurso profissional',
+  'exp.1.date':'2023 — Presente','exp.1.role':'Seu Cargo Atual','exp.1.company':'Nome da Empresa','exp.1.desc':'Descreva aqui suas responsabilidades principais e conquistas mais notáveis neste cargo.',
+  'exp.2.date':'2021 — 2023','exp.2.role':'Seu Cargo Anterior','exp.2.company':'Outra Empresa','exp.2.desc':'Descreva as tarefas que realizou e o impacto que teve nesta posição.',
+  'exp.3.date':'2019 — 2021','exp.3.role':'Seu Primeiro Cargo','exp.3.company':'Primeira Empresa','exp.3.desc':'Descreva como sua carreira começou e os aprendizados-chave que obteve.',
+  'edu.tag':'Formação','edu.title':'Estudos e certificações',
+  'edu.1.t':'Seu Diploma Universitário','edu.1.inst':'Universidade Exemplo','edu.1.date':'2015 — 2019',
+  'edu.2.t':'Certificação Relevante','edu.2.inst':'Plataforma / Instituição','edu.2.date':'2020',
+  'edu.3.t':'Outro Curso ou Formação','edu.3.inst':'Instituição','edu.3.date':'2021',
+  'val.tag':'O que posso contribuir',
+  'val.quote':'Trago <span class="hl">dedicação</span>, <span class="hl">visão criativa</span> e um compromisso real com os resultados. Não busco apenas entregar — busco <span class="hl-underline">entender o porquê</span>, somar à equipe e crescer com cada desafio.',
+  'val.p1':'Compromisso','val.p2':'Proatividade','val.p3':'Crescimento','val.p4':'Qualidade',
+  'cta.tag':'Contato','cta.title':'Vamos conversar?',
+  'cta.desc':'Estou em busca de novas oportunidades e adoraria ouvir sua proposta. Não hesite em me escrever.',
+  'cta.fname':'Seu nome','cta.femail':'Seu email','cta.fmsg':'Sua mensagem...','cta.send':'Enviar mensagem',
+  'footer':'Feito com dedicação',
+  'marquee':'CRIATIVO•RESOLUTIVO•EQUIPE•DETALHISTA•INOVADOR•ADAPTÁVEL•PROATIVO•AUTODIDATA'
+},
+de: {
+  'nav.str':'Stärken','nav.exp':'Erfahrung','nav.edu':'Ausbildung','nav.val':'Mein Beitrag','nav.cta':'Kontakt',
+  'hero.tag':'Willkommen in meinem Portfolio','hero.hi':'Hallo, ich bin','hero.name':'Ihr Name',
+  'hero.sub':'Leidenschaftlicher Fachmann mit einer Wachstumsmentalität und dem Antrieb, jedem Projekt echten Mehrwert zu bringen.',
+  'hero.cta':'Kontakt','hero.scroll':'Scrollen zum Entdecken','hero.photo':'Ihr Foto hier',
+  'str.tag':'Stärken','str.title':'Was mich ausmacht',
+  'str.1.t':'Problemlösung','str.1.d':'Ich analysiere, zerlege und finde effiziente Lösungen. Jedes Hindernis ist ein Rätsel, das ich gerne löse.',
+  'str.2.t':'Kontinuierliches Lernen','str.2.d':'Ich höre nie auf zu lernen. Ich bleibe auf dem neuesten Stand der Technik und strebe ständig nach Verbesserung.',
+  'str.3.t':'Teamarbeit','str.3.d':'Ich kommuniziere klar, höre aktiv zu und glaube, dass die besten Ergebnisse aus Zusammenarbeit entstehen.',
+  'str.4.t':'Liebe zum Detail','str.4.d':'Qualität liegt im Detail. Ich achte auf jeden Aspekt meiner Arbeit, um einwandfreie Ergebnisse zu liefern.',
+  'str.5.t':'Kreatives Denken','str.5.d':'Ich bringe frische Ideen und innovative Ansätze ein. Ich gebe mich nicht mit dem Konventionellen zufrieden, wenn es einen besseren Weg gibt.',
+  'str.6.t':'Anpassungsfähigkeit','str.6.d':'Ich fühle mich in sich verändernden Umgebungen wohl. Ich nehme neue Herausforderungen mit Begeisterung und Flexibilität an.',
+  'exp.tag':'Werdegang','exp.title':'Mein beruflicher Weg',
+  'exp.1.date':'2023 — Heute','exp.1.role':'Ihre Aktuelle Position','exp.1.company':'Firmenname','exp.1.desc':'Beschreiben Sie hier Ihre Hauptverantwortlichkeiten und bemerkenswertesten Erfolge in dieser Position.',
+  'exp.2.date':'2021 — 2023','exp.2.role':'Ihre Vorherige Position','exp.2.company':'Andere Firma','exp.2.desc':'Beschreiben Sie die Aufgaben und den Einfluss, den Sie in dieser Position hatten.',
+  'exp.3.date':'2019 — 2021','exp.3.role':'Ihre Erste Position','exp.3.company':'Erste Firma','exp.3.desc':'Beschreiben Sie, wie Ihre Karriere begann und welche wichtigen Erkenntnisse Sie gewonnen haben.',
+  'edu.tag':'Ausbildung','edu.title':'Studium & Zertifikate',
+  'edu.1.t':'Ihr Universitätsabschluss','edu.1.inst':'Beispiel-Universität','edu.1.date':'2015 — 2019',
+  'edu.2.t':'Relevante Zertifizierung','edu.2.inst':'Plattform / Institution','edu.2.date':'2020',
+  'edu.3.t':'Anderer Kurs oder Fortbildung','edu.3.inst':'Institution','edu.3.date':'2021',
+  'val.tag':'Was ich beitragen kann',
+  'val.quote':'Ich bringe <span class="hl">Hingabe</span>, <span class="hl">kreative Vision</span> und echtes Engagement für Ergebnisse mit. Ich will nicht nur liefern — ich will <span class="hl-underline">das Warum verstehen</span>, das Team bereichern und mit jeder Herausforderung wachsen.',
+  'val.p1':'Engagement','val.p2':'Proaktivität','val.p3':'Wachstum','val.p4':'Qualität',
+  'cta.tag':'Kontakt','cta.title':'Sprechen wir?',
+  'cta.desc':'Ich suche neue Möglichkeiten und würde mich freuen, von Ihnen zu hören. Zögern Sie nicht, mich zu kontaktieren.',
+  'cta.fname':'Ihr Name','cta.femail':'Ihre E-Mail','cta.fmsg':'Ihre Nachricht...','cta.send':'Nachricht senden',
+  'footer':'Mit Hingabe gemacht',
+  'marquee':'KREATIV•LÖSUNGSORIENTIERT•TEAMARBEIT•DETAILGENAU•INNOVATIV•ANPASSUNGSFÄHIG•PROAKTIV•AUTODIDAKT'
+}
+};
+
+let lang = 'es';
+
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
+
+  const t = T[l];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (t[k]) el.innerHTML = t[k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const k = el.getAttribute('data-i18n-ph');
+    if (t[k]) el.placeholder = t[k];
+  });
+  buildMarquee(t.marquee);
+}
+
+document.getElementById('langBar').addEventListener('click', e => {
+  if (e.target.classList.contains('lang-btn')) setLang(e.target.dataset.lang);
+});
+
+// ── Marquee ──
+function buildMarquee(str) {
+  const words = str.split('•');
+  const html = words.map(w => w.trim()).filter(Boolean).map(w => `<span>${w}</span><span class="sep"></span>`).join('');
+  document.getElementById('marqueeA').innerHTML = html;
+  document.getElementById('marqueeB').innerHTML = html;
+}
+buildMarquee(T.es.marquee);
+
+// ── Theme ──
+const toggle = document.getElementById('themeToggle');
+const sun = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const moon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  toggle.innerHTML = t === 'light' ? sun : moon;
+  localStorage.setItem('theme', t);
+}
+toggle.addEventListener('click', () => {
+  setTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+});
+setTheme(localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light'));
+
+// ── Scroll reveals ──
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+// ── Mobile menu ──
+document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
+document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
+
+// ── Scroll-to-top button ──
+(function(){
+  const scrollBtn = document.getElementById('scrollTopBtn');
+  if (!scrollBtn) return;
+  const showAfter = 300;
+  function onScroll() {
+    if (window.scrollY > showAfter) scrollBtn.classList.add('show');
+    else scrollBtn.classList.remove('show');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  // initial state
+  onScroll();
+})();
+</script>
+</body>
+</html>

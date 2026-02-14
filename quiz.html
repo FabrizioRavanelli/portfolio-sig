@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quiz — Revolución francesa y el Imperio (A/B/C/D)</title>
+  <style>
+    :root{
+      --bg:#0b1220; --card:#121a2b; --muted:#9fb0d0; --text:#eaf0ff;
+      --accent:#4da3ff; --ok:#2dd4bf; --bad:#fb7185; --warn:#fbbf24;
+      --shadow: rgba(0,0,0,.35) 0px 19px 38px, rgba(0,0,0,.22) 0px 15px 12px;
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(77,163,255,.18), transparent 60%),
+                  radial-gradient(900px 600px at 80% 20%, rgba(45,212,191,.14), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      padding:24px;
+    }
+    .wrap{width:min(920px, 100%); display:grid; gap:16px;}
+    header{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:14px 16px;
+      background:rgba(18,26,43,.75);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .brand{display:flex; flex-direction:column; gap:2px}
+    .brand b{font-size:16px}
+    .brand span{font-size:12px; color:var(--muted)}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(77,163,255,.12);
+      border:1px solid rgba(77,163,255,.25);
+      color:var(--text);
+      font-size:12px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .grid{display:grid; grid-template-columns: 1.2fr .8fr; gap:16px;}
+    @media (max-width: 860px){ .grid{grid-template-columns:1fr;} }
+
+    .card{
+      background:rgba(18,26,43,.75);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+      backdrop-filter: blur(10px);
+    }
+    h1,h2{margin:0 0 10px}
+    h1{font-size:18px}
+    h2{font-size:15px; color:var(--muted); font-weight:600}
+
+    .btnrow{display:flex; flex-wrap:wrap; gap:10px; margin-top:12px}
+    button{
+      appearance:none; border:0;
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      cursor:pointer;
+      transition: transform .06s ease, background .15s ease, border-color .15s ease;
+      font-weight:700;
+    }
+    button:hover{ background:rgba(255,255,255,.09); border-color:rgba(255,255,255,.18);}
+    button:active{ transform: translateY(1px); }
+    .primary{ background:rgba(77,163,255,.18); border-color:rgba(77,163,255,.35); }
+    .primary:hover{ background:rgba(77,163,255,.24); }
+    .danger{ background:rgba(251,113,133,.14); border-color:rgba(251,113,133,.35); }
+    .danger:hover{ background:rgba(251,113,133,.18); }
+
+    .qa{
+      display:flex; flex-direction:column; gap:10px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.12);
+    }
+    .q{
+      font-size:16px;
+      line-height:1.35;
+      font-weight:800;
+    }
+    .meta{
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+      color:var(--muted); font-size:12px;
+    }
+    .progress{
+      height:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .bar{height:100%; width:0%; background:rgba(77,163,255,.65);}
+    .timebar{height:8px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; border:1px solid rgba(255,255,255,.10);}
+    .timefill{height:100%; width:100%; background:rgba(251,191,36,.7);}
+
+    .choices{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width: 640px){ .choices{grid-template-columns:1fr;} }
+
+    .choice{
+      display:flex; align-items:flex-start; gap:10px;
+      text-align:left;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+      cursor:pointer;
+      transition: transform .06s ease, background .15s ease, border-color .15s ease;
+      min-height:58px;
+    }
+    .choice:hover{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.18); }
+    .choice:active{ transform: translateY(1px); }
+    .choice[disabled]{ opacity:.65; cursor:not-allowed; }
+    .letter{
+      flex:0 0 auto;
+      width:28px; height:28px;
+      display:inline-flex; align-items:center; justify-content:center;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      font-weight:900;
+    }
+    .choice.ok{ border-color: rgba(45,212,191,.40); background: rgba(45,212,191,.12); }
+    .choice.bad{ border-color: rgba(251,113,133,.40); background: rgba(251,113,133,.12); }
+    .choice.reveal{ border-color: rgba(77,163,255,.45); background: rgba(77,163,255,.12); }
+
+    .feedback{
+      border-radius:14px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+      display:none;
+      gap:8px;
+      flex-direction:column;
+    }
+    .feedback.show{display:flex;}
+    .feedback.ok{ border-color: rgba(45,212,191,.35); background: rgba(45,212,191,.10); }
+    .feedback.bad{ border-color: rgba(251,113,133,.35); background: rgba(251,113,133,.10); }
+    .feedback .title{font-weight:900}
+    .small{font-size:12px; color:var(--muted)}
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.15);
+      color: var(--text);
+      font-size:12px;
+    }
+
+    .list{
+      display:flex; flex-direction:column; gap:10px;
+      max-height: 520px; overflow:auto; padding-right:6px;
+    }
+    .item{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.12);
+      border-radius:14px;
+      padding:10px 12px;
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .tag{
+      display:inline-flex; align-self:flex-start;
+      padding:4px 8px; border-radius:999px;
+      font-size:11px; font-weight:900;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.06);
+    }
+    .tag.ok{ border-color: rgba(45,212,191,.35); background: rgba(45,212,191,.10); }
+    .tag.bad{ border-color: rgba(251,113,133,.35); background: rgba(251,113,133,.10); }
+    .muted{color:var(--muted)}
+    .hidden{display:none !important;}
+    .sep{height:1px; background:rgba(255,255,255,.08); margin:10px 0}
+    .optRow{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    label{font-size:13px; color:var(--muted)}
+    select, input[type="number"]{
+      padding:10px 12px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      outline:none;
+      width:auto;
+    }
+    .footerNote{font-size:12px; color:var(--muted); line-height:1.35}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <b>Quiz Historia</b>
+        <span>Revolución francesa y el Imperio — opción múltiple (A/B/C/D)</span>
+      </div>
+      <div class="pill" id="pillStatus">Listo para jugar</div>
+    </header>
+
+    <!-- HOME -->
+    <section class="grid" id="homeScreen">
+      <div class="card">
+        <h1>👋 Bienvenido</h1>
+        <div class="qa">
+          <div class="q">Elige la respuesta correcta (A, B, C o D).</div>
+          <div class="small">
+            • Las opciones se mezclan en cada pregunta.<br/>
+            • Puedes activar/desactivar el <b>tiempo por pregunta</b> en Opciones.
+          </div>
+          <div class="btnrow">
+            <button class="primary" id="btnPlay">▶️ Jugar</button>
+            <button id="btnOptions">⚙️ Opciones</button>
+            <button id="btnAbout">ℹ️ Ayuda</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📊 Última partida</h2>
+        <div class="qa">
+          <div class="meta"><span>Mejor puntuación:</span> <b id="bestScore">—</b></div>
+          <div class="meta"><span>Última puntuación:</span> <b id="lastScore">—</b></div>
+          <div class="meta"><span>Preguntas totales:</span> <b id="totalCount">—</b></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OPTIONS -->
+    <section class="grid hidden" id="optionsScreen">
+      <div class="card">
+        <h1>⚙️ Opciones</h1>
+        <div class="qa">
+          <div class="optRow">
+            <label for="selOrder">Orden:</label>
+            <select id="selOrder">
+              <option value="shuffle">Aleatorio</option>
+              <option value="inOrder">En orden</option>
+            </select>
+          </div>
+          <div class="optRow">
+            <label for="selCount">Preguntas por partida:</label>
+            <select id="selCount"></select>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="optRow">
+            <label for="selTimerEnabled">Tiempo por pregunta:</label>
+            <select id="selTimerEnabled">
+              <option value="on">Activado</option>
+              <option value="off">Desactivado</option>
+            </select>
+
+            <label for="numSeconds">Segundos:</label>
+            <input id="numSeconds" type="number" min="5" max="120" step="5" />
+          </div>
+
+          <div class="btnrow">
+            <button class="primary" id="btnSaveOptions">💾 Guardar</button>
+            <button id="btnBackHome1">⬅️ Volver</button>
+            <button class="danger" id="btnResetStats">🧹 Borrar estadísticas</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🧠 Consejo</h2>
+        <div class="footerNote">
+          Si el tiempo le estresa, desactívalo. Para entrenar rápido, actívalo con 20–30s.
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="grid hidden" id="aboutScreen">
+      <div class="card">
+        <h1>ℹ️ Ayuda</h1>
+        <div class="qa">
+          <div class="small">
+            • Haz clic en una opción o usa el teclado: <span class="kbd">A</span> <span class="kbd">B</span> <span class="kbd">C</span> <span class="kbd">D</span>.<br/>
+            • Si hay tiempo activado y se acaba, se marca como incorrecta y pasa a la siguiente.
+          </div>
+          <div class="btnrow">
+            <button id="btnBackHome2">⬅️ Volver</button>
+            <button class="primary" id="btnPlayFromAbout">▶️ Jugar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📌 Nota</h2>
+        <div class="footerNote">
+          Cada pregunta usa 1 respuesta correcta + 3 respuestas correctas de otras preguntas como “distractores”.
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="grid hidden" id="quizScreen">
+      <div class="card">
+        <h1>📝 Pregunta</h1>
+
+        <div class="qa">
+          <div class="meta">
+            <span>Progreso:</span> <b id="metaProgress">0/0</b>
+            <span class="muted">·</span>
+            <span>Aciertos:</span> <b id="metaScore">0</b>
+            <span class="muted">·</span>
+            <span id="timerLabel" class="muted">Tiempo: —</span>
+          </div>
+
+          <div class="progress" aria-label="Progreso">
+            <div class="bar" id="progressBar"></div>
+          </div>
+
+          <div class="timebar" id="timeBarWrap" aria-label="Tiempo">
+            <div class="timefill" id="timeFill"></div>
+          </div>
+
+          <div class="q" id="questionText">—</div>
+
+          <div class="choices" id="choicesWrap"></div>
+
+          <div class="feedback" id="feedbackBox">
+            <div class="title" id="feedbackTitle">—</div>
+            <div class="small" id="feedbackDetails">—</div>
+          </div>
+
+          <div class="btnrow">
+            <button id="btnSkip">Saltar</button>
+            <button class="danger" id="btnQuit">Salir</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📋 Historial de esta partida</h2>
+        <div class="list" id="historyList"></div>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section class="grid hidden" id="resultsScreen">
+      <div class="card">
+        <h1>🏁 Resultado</h1>
+        <div class="qa">
+          <div class="q" id="resultHeadline">—</div>
+          <div class="meta">
+            <span>Puntuación:</span> <b id="resultScore">—</b>
+            <span class="muted">·</span>
+            <span>Preguntas:</span> <b id="resultCount">—</b>
+          </div>
+
+          <div class="btnrow">
+            <button class="primary" id="btnPlayAgain">🔁 Jugar otra vez</button>
+            <button id="btnRetryWrong">🎯 Repetir falladas</button>
+            <button id="btnBackHome3">🏠 Inicio</button>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="footerNote" id="resultTip"></div>
+      </div>
+
+      <div class="card">
+        <h2>✅ Revisión</h2>
+        <div class="list" id="reviewList"></div>
+      </div>
+    </section>
+
+  </div>
+
+<script>
+const QUESTIONS = [
+  { q: "¿Cuándo se abren los Estados Generales?", a: "El 5 de mayo de 1789." },
+  { q: "¿Dónde se reúnen los Estados Generales?", a: "En el castillo de Versalles." },
+  { q: "¿Qué hacen los diputados del Tercer Estado el 17 de junio de 1789?", a: "Se proclaman Asamblea nacional." },
+  { q: "¿Qué prometen los diputados el 20 de junio de 1789?", a: "Redactar una Constitución." },
+  { q: "¿Qué acontecimiento ocurre el 14 de julio de 1789?", a: "La toma de la Bastilla." },
+  { q: "¿Qué simboliza la Bastilla?", a: "El poder arbitrario del rey." },
+  { q: "¿Qué ocurre la noche del 4 de agosto de 1789?", a: "La abolición de los privilegios." },
+  { q: "¿Qué se adopta el 26 de agosto de 1789?", a: "La Declaración de los Derechos del Hombre y del Ciudadano." },
+  { q: "¿Qué establece el artículo 1 de la DDHC?", a: "Los hombres nacen y permanecen libres e iguales en derechos." },
+  { q: "¿Qué derechos menciona el artículo 2?", a: "Libertad, propiedad, seguridad y resistencia a la opresión." },
+  { q: "¿Qué afirma el artículo 3?", a: "La soberanía reside en la nación." },
+  { q: "¿Qué define el artículo 6?", a: "La ley es la expresión de la voluntad general." },
+  { q: "¿Qué garantiza el artículo 11?", a: "La libertad de opinión y expresión." },
+  { q: "¿Qué establece el artículo 13?", a: "Los ciudadanos contribuyen a los gastos públicos según sus capacidades." },
+  { q: "¿Qué protege el artículo 17?", a: "La propiedad es un derecho inviolable y sagrado." },
+  { q: "¿Cuándo tiene lugar la marcha de las mujeres a Versalles?", a: "El 5 de octubre de 1789." },
+  { q: "¿Qué reclaman las mujeres en Versalles?", a: "Pan." },
+  { q: "¿Qué consecuencia tiene la marcha de las mujeres?", a: "El rey es llevado a París." },
+  { q: "¿Qué régimen crea la Constitución de 1791?", a: "Una monarquía constitucional." },
+  { q: "¿Qué poder conserva el rey en 1791?", a: "El poder ejecutivo." },
+  { q: "¿Qué poder ejerce la Asamblea?", a: "El poder legislativo." },
+  { q: "¿Qué ocurre el 10 de agosto de 1792?", a: "El rey es derrocado." },
+  { q: "¿Cuándo se proclama la República?", a: "El 21 de septiembre de 1792." },
+  { q: "¿Qué afirma la Constitución de 1793?", a: "La soberanía de la nación y la igualdad de los ciudadanos." },
+  { q: "¿Qué potencias europeas atacan a Francia?", a: "Austria y Prusia." },
+  { q: "¿Qué es la levée en masse?", a: "El servicio militar obligatorio." },
+  { q: "¿Qué organismo dirige el gobierno durante la Terreur?", a: "El Comité de Salut public." },
+  { q: "¿Quién es una figura central del Comité de Salut public?", a: "Robespierre." },
+  { q: "¿Qué ocurre el 21 de enero de 1793?", a: "La ejecución de Luis XVI." },
+  { q: "¿Qué es la Terreur?", a: "Un período de represión para salvar la República." },
+  { q: "¿Qué ocurre en la Vendée?", a: "Una revuelta contra la Revolución." },
+  { q: "¿Cuántos departamentos tenía Francia en 1790?", a: "83 departamentos." },
+  { q: "¿Cuándo da Napoleón el golpe de Estado?", a: "El 9 de noviembre de 1799." },
+  { q: "¿Qué régimen establece tras el golpe?", a: "El Consulado." },
+  { q: "¿Cuándo se convierte Napoleón en emperador?", a: "En mayo de 1804." },
+  { q: "¿Dónde se corona Napoleón?", a: "En Notre-Dame de París." },
+  { q: "¿Qué régimen se instaura en 1804?", a: "El Imperio." },
+  { q: "¿Qué tipo de poder ejerce Napoleón?", a: "Un poder autoritario." },
+  { q: "¿Qué ocurre con la prensa bajo Napoleón?", a: "Es censurada." },
+  { q: "¿Hasta qué año dura el Imperio?", a: "1815." },
+  { q: "¿Qué establece la Ley de Allarde (1791)?", a: "Libertad de comercio y profesión." },
+  { q: "¿Qué prohíbe la Ley Le Chapelier?", a: "Las asociaciones de trabajadores y gremios." },
+  { q: "¿Qué sistema se unifica en 1795?", a: "El sistema de pesos y medidas." },
+  { q: "¿Qué moneda crea Napoleón en 1803?", a: "El franco germinal." },
+  { q: "¿Qué objetivo tiene el franco germinal?", a: "Estabilizar la economía." },
+  { q: "¿Quién paga ahora los impuestos?", a: "Todos los ciudadanos." },
+  { q: "¿Qué privilegios fiscales desaparecen?", a: "Los del Antiguo Régimen." },
+  { q: "¿En qué año se crean los departamentos?", a: "1790." },
+  { q: "¿Con qué finalidad se crean?", a: "Organizar mejor el territorio." },
+  { q: "¿Qué crea Napoleón en 1800?", a: "Los prefectos." },
+  { q: "¿Qué hacen los prefectos?", a: "Representan al Estado en los departamentos." },
+  { q: "¿Qué institución educativa crea Napoleón en 1802?", a: "Los liceos." },
+  { q: "¿Cuál es la función de los liceos?", a: "Formar nuevas élites." },
+  { q: "¿En qué año se publica el Código civil?", a: "1804." },
+  { q: "¿Qué garantiza el Código civil?", a: "La igualdad ante la ley." },
+  { q: "¿Qué derecho protege fuertemente el Código civil?", a: "La propiedad privada." },
+  { q: "¿En qué territorios se aplica el Código civil?", a: "En Francia y en territorios dominados por Francia." },
+  { q: "¿Cuándo se abole la esclavitud por primera vez?", a: "En 1794." },
+  { q: "¿Quién abole la esclavitud?", a: "La Convención." },
+  { q: "¿Qué declara el decreto de 1794?", a: "Que todos los hombres son ciudadanos franceses en las colonias." },
+  { q: "¿Cuándo se restablece la esclavitud?", a: "En 1802." },
+  { q: "¿Quién ordena su restablecimiento?", a: "Napoleón Bonaparte." },
+  { q: "¿En qué período Francia se lanza a la conquista de Europa?", a: "A partir de 1795." },
+  { q: "¿Qué principios difunde Francia en Europa?", a: "Igualdad y soberanía nacional." },
+  { q: "¿Qué batalla importante ocurre en 1805?", a: "Austerlitz." },
+  { q: "¿Qué derrota naval sufre Francia en 1805?", a: "Trafalgar." },
+  { q: "¿Qué derrota marca el final del Imperio?", a: "Waterloo (1815)." },
+  { q: "¿Qué régimen desaparece en 1789?", a: "La monarquía absoluta." },
+  { q: "¿Qué principio sustituye al poder del rey?", a: "La soberanía nacional." },
+  { q: "¿Qué nuevo sistema político nace tras la Revolución?", a: "Un sistema basado en la Constitución." },
+  { q: "¿Qué régimen sucede a la monarquía constitucional?", a: "La República." },
+  { q: "¿Qué régimen sucede al Consulado?", a: "El Imperio." },
+  { q: "¿Qué sucede con los privilegios sociales?", a: "Son abolidos." },
+  { q: "¿Qué sucede con la igualdad ante la ley?", a: "Se establece como principio fundamental." },
+  { q: "¿Qué sucede con el territorio francés bajo Napoleón?", a: "Se expande." },
+];
+
+const LS_KEY = "quiz_rev_imperio_mcq_v1";
+const defaultSettings = {
+  order: "shuffle",     // shuffle | inOrder
+  count: Math.min(QUESTIONS.length, 30),
+  timerEnabled: true,
+  secondsPerQuestion: 25,
+};
+
+let settings = loadSettings();
+let session = null;
+let timer = { id: null, start: 0, durationMs: 0 };
+
+const el = (id) => document.getElementById(id);
+
+function loadSettings(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return { ...defaultSettings };
+    const parsed = JSON.parse(raw);
+    return { ...defaultSettings, ...parsed };
+  }catch{
+    return { ...defaultSettings };
+  }
+}
+function saveSettings(){
+  localStorage.setItem(LS_KEY, JSON.stringify(settings));
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickQuestions(){
+  const base = QUESTIONS.map((x, idx) => ({...x, id: idx}));
+  const ordered = settings.order === "shuffle" ? shuffle(base) : base;
+  return ordered.slice(0, Math.min(settings.count, ordered.length));
+}
+
+function showScreen(which){
+  const screens = ["homeScreen","optionsScreen","aboutScreen","quizScreen","resultsScreen"];
+  for(const s of screens) el(s).classList.add("hidden");
+  el(which).classList.remove("hidden");
+}
+
+function setPill(text){
+  el("pillStatus").textContent = text;
+}
+
+function renderStats(){
+  const best = Number(localStorage.getItem(LS_KEY + "_best") || "0");
+  const last = localStorage.getItem(LS_KEY + "_last");
+  el("bestScore").textContent = best ? best + "%" : "—";
+  el("lastScore").textContent = last ? last : "—";
+  el("totalCount").textContent = String(QUESTIONS.length);
+}
+
+function writeLastAndBest(percent){
+  localStorage.setItem(LS_KEY + "_last", percent + "%");
+  const best = Number(localStorage.getItem(LS_KEY + "_best") || "0");
+  if(percent > best) localStorage.setItem(LS_KEY + "_best", String(percent));
+}
+
+function setupOptionsUI(){
+  const selCount = el("selCount");
+  selCount.innerHTML = "";
+  const steps = [10, 15, 20, 25, 30, 40, 50, 60, 75, QUESTIONS.length].filter((v, i, a) => a.indexOf(v) === i);
+  for(const n of steps){
+    if(n > QUESTIONS.length) continue;
+    const opt = document.createElement("option");
+    opt.value = String(n);
+    opt.textContent = String(n);
+    selCount.appendChild(opt);
+  }
+
+  el("selOrder").value = settings.order;
+  el("selCount").value = String(settings.count);
+  el("selTimerEnabled").value = settings.timerEnabled ? "on" : "off";
+  el("numSeconds").value = String(settings.secondsPerQuestion);
+}
+
+function startGame(customList = null){
+  const list = customList ? customList.slice() : pickQuestions();
+  session = {
+    list,
+    index: 0,
+    correct: 0,
+    history: [], // {q,a,choices[], chosen, ok, timedOut}
+    wrongIds: new Set(),
+    locked: false,
+    currentChoices: null, // [{text,isCorrect,letter}]
+  };
+
+  el("historyList").innerHTML = "";
+  hideFeedback();
+  showScreen("quizScreen");
+  setPill("Jugando");
+  renderQuestion();
+}
+
+function stopTimer(){
+  if(timer.id){
+    clearInterval(timer.id);
+    timer.id = null;
+  }
+}
+
+function startTimer(){
+  stopTimer();
+  if(!settings.timerEnabled){
+    el("timeBarWrap").classList.add("hidden");
+    el("timerLabel").textContent = "Tiempo: desactivado";
+    return;
+  }
+  el("timeBarWrap").classList.remove("hidden");
+
+  const durationMs = Math.max(5, settings.secondsPerQuestion) * 1000;
+  timer.start = performance.now();
+  timer.durationMs = durationMs;
+
+  tickTimer(); // paint first
+  timer.id = setInterval(tickTimer, 50);
+}
+
+function tickTimer(){
+  const now = performance.now();
+  const elapsed = now - timer.start;
+  const left = Math.max(0, timer.durationMs - elapsed);
+  const pct = Math.max(0, Math.min(1, left / timer.durationMs));
+  el("timeFill").style.width = (pct * 100).toFixed(1) + "%";
+  el("timerLabel").textContent = "Tiempo: " + Math.ceil(left / 1000) + "s";
+
+  if(left <= 0){
+    stopTimer();
+    if(session && !session.locked){
+      handleTimeout();
+    }
+  }
+}
+
+function buildChoicesForQuestion(item){
+  // 1 correcta + 3 distractores (respuestas correctas de otras preguntas)
+  const correct = item.a;
+  const pool = QUESTIONS
+    .filter(x => x.a !== correct)
+    .map(x => x.a);
+
+  const distractors = shuffle(pool).slice(0, 3);
+  const all = shuffle([correct, ...distractors]);
+
+  const letters = ["A","B","C","D"];
+  return all.map((text, idx) => ({
+    text,
+    isCorrect: text === correct,
+    letter: letters[idx]
+  }));
+}
+
+function renderQuestion(){
+  const total = session.list.length;
+  const i = session.index;
+
+  if(i >= total){
+    finishGame();
+    return;
+  }
+
+  session.locked = false;
+
+  const item = session.list[i];
+  el("questionText").textContent = item.q;
+  el("metaProgress").textContent = (i+1) + "/" + total;
+  el("metaScore").textContent = String(session.correct);
+
+  const pct = Math.round(((i) / total) * 100);
+  el("progressBar").style.width = pct + "%";
+
+  hideFeedback();
+
+  // Choices (random order each question load)
+  const choices = buildChoicesForQuestion(item);
+  session.currentChoices = choices;
+
+  const wrap = el("choicesWrap");
+  wrap.innerHTML = "";
+  for(const c of choices){
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.type = "button";
+    btn.setAttribute("data-letter", c.letter);
+
+    const letter = document.createElement("span");
+    letter.className = "letter";
+    letter.textContent = c.letter;
+
+    const text = document.createElement("div");
+    text.style.flex = "1";
+    text.textContent = c.text;
+
+    btn.appendChild(letter);
+    btn.appendChild(text);
+
+    btn.addEventListener("click", () => chooseAnswer(c.letter));
+    wrap.appendChild(btn);
+  }
+
+  // start timer
+  startTimer();
+}
+
+function setChoicesDisabled(disabled){
+  const buttons = el("choicesWrap").querySelectorAll("button.choice");
+  buttons.forEach(b => {
+    if(disabled) b.setAttribute("disabled","true");
+    else b.removeAttribute("disabled");
+  });
+}
+
+function markChoices(chosenLetter){
+  const buttons = Array.from(el("choicesWrap").querySelectorAll("button.choice"));
+  const byLetter = new Map(buttons.map(b => [b.getAttribute("data-letter"), b]));
+
+  // mark chosen
+  const chosen = session.currentChoices.find(x => x.letter === chosenLetter);
+  if(chosen){
+    const btn = byLetter.get(chosenLetter);
+    if(btn) btn.classList.add(chosen.isCorrect ? "ok" : "bad");
+  }
+
+  // reveal correct
+  const correct = session.currentChoices.find(x => x.isCorrect);
+  if(correct){
+    const btn = byLetter.get(correct.letter);
+    if(btn) btn.classList.add("reveal");
+  }
+}
+
+function hideFeedback(){
+  const box = el("feedbackBox");
+  box.className = "feedback";
+  box.classList.remove("show");
+}
+
+function showFeedback(ok, title, details){
+  const box = el("feedbackBox");
+  box.className = "feedback " + (ok ? "ok" : "bad");
+  box.classList.add("show");
+  el("feedbackTitle").textContent = title;
+  el("feedbackDetails").textContent = details;
+}
+
+function addHistoryRow(entry){
+  const row = document.createElement("div");
+  row.className = "item";
+
+  const tag = document.createElement("div");
+  tag.className = "tag " + (entry.ok ? "ok" : "bad");
+  tag.textContent = entry.timedOut ? "Tiempo" : (entry.ok ? "Correcta" : "Incorrecta");
+
+  const q = document.createElement("div");
+  q.innerHTML = "<b>Q:</b> " + escapeHtml(entry.q);
+
+  const chosen = document.createElement("div");
+  chosen.innerHTML = "<span class='muted'><b>Elegida:</b> " + escapeHtml(entry.chosen || "—") + "</span>";
+
+  const a = document.createElement("div");
+  a.innerHTML = "<b>Correcta:</b> " + escapeHtml(entry.a);
+
+  row.appendChild(tag);
+  row.appendChild(q);
+  row.appendChild(chosen);
+  row.appendChild(a);
+
+  el("historyList").prepend(row);
+}
+
+function chooseAnswer(letter){
+  if(!session || session.locked) return;
+  session.locked = true;
+
+  stopTimer();
+  setChoicesDisabled(true);
+
+  const item = session.list[session.index];
+  const chosen = session.currentChoices.find(x => x.letter === letter);
+  const ok = !!chosen && chosen.isCorrect;
+
+  if(ok) session.correct++;
+  else session.wrongIds.add(item.id);
+
+  markChoices(letter);
+
+  const entry = {
+    id: item.id,
+    q: item.q,
+    a: item.a,
+    chosen: (chosen ? (chosen.letter + ") " + chosen.text) : letter),
+    ok,
+    timedOut: false
+  };
+  session.history.push(entry);
+  addHistoryRow(entry);
+
+  showFeedback(ok, ok ? "✅ ¡Correcto!" : "❌ Incorrecto",
+    ok ? "Bien hecho." : ("La correcta era: " + item.a)
+  );
+
+  session.index++;
+  setTimeout(() => {
+    setChoicesDisabled(false);
+    renderQuestion();
+  }, 850);
+}
+
+function handleTimeout(){
+  if(!session || session.locked) return;
+  session.locked = true;
+
+  setChoicesDisabled(true);
+
+  const item = session.list[session.index];
+  session.wrongIds.add(item.id);
+
+  // reveal correct choice visually
+  const correct = session.currentChoices.find(x => x.isCorrect);
+  if(correct){
+    markChoices(correct.letter); // chosen = correct, will mark as ok + reveal; ok for "reveal"
+  }
+
+  const entry = {
+    id: item.id,
+    q: item.q,
+    a: item.a,
+    chosen: "⏱️ (sin responder)",
+    ok: false,
+    timedOut: true
+  };
+  session.history.push(entry);
+  addHistoryRow(entry);
+
+  showFeedback(false, "⏱️ Se acabó el tiempo", "Respuesta correcta: " + item.a);
+
+  session.index++;
+  setTimeout(() => {
+    setChoicesDisabled(false);
+    renderQuestion();
+  }, 900);
+}
+
+function skipQuestion(){
+  if(!session || session.locked) return;
+  session.locked = true;
+  stopTimer();
+
+  const item = session.list[session.index];
+  session.wrongIds.add(item.id);
+
+  const entry = {
+    id: item.id,
+    q: item.q,
+    a: item.a,
+    chosen: "⏭️ (saltada)",
+    ok: false,
+    timedOut: false
+  };
+  session.history.push(entry);
+  addHistoryRow(entry);
+
+  showFeedback(false, "⏭️ Saltada", "Respuesta correcta: " + item.a);
+
+  session.index++;
+  setTimeout(() => {
+    renderQuestion();
+  }, 650);
+}
+
+function finishGame(){
+  stopTimer();
+
+  const total = session.list.length;
+  const percent = total ? Math.round((session.correct / total) * 100) : 0;
+  writeLastAndBest(percent);
+
+  el("resultHeadline").textContent =
+    percent >= 85 ? "¡Excelente!" :
+    percent >= 70 ? "¡Muy bien!" :
+    percent >= 50 ? "¡Buen intento!" : "¡Vamos a practicar un poco más!";
+
+  el("resultScore").textContent = session.correct + "/" + total + " (" + percent + "%)";
+  el("resultCount").textContent = String(total);
+
+  // review list
+  const review = el("reviewList");
+  review.innerHTML = "";
+  for(const entry of session.history){
+    const row = document.createElement("div");
+    row.className = "item";
+
+    const tag = document.createElement("div");
+    tag.className = "tag " + (entry.ok ? "ok" : "bad");
+    tag.textContent = entry.timedOut ? "Tiempo" : (entry.ok ? "Correcta" : "Incorrecta");
+
+    const q = document.createElement("div");
+    q.innerHTML = "<b>Q:</b> " + escapeHtml(entry.q);
+
+    const chosen = document.createElement("div");
+    chosen.innerHTML = "<span class='muted'><b>Elegida:</b> " + escapeHtml(entry.chosen || "—") + "</span>";
+
+    const a = document.createElement("div");
+    a.innerHTML = "<b>Correcta:</b> " + escapeHtml(entry.a);
+
+    row.appendChild(tag); row.appendChild(q); row.appendChild(chosen); row.appendChild(a);
+    review.appendChild(row);
+  }
+
+  const wrongCount = session.wrongIds.size;
+  el("btnRetryWrong").disabled = wrongCount === 0;
+  el("resultTip").textContent =
+    wrongCount === 0
+      ? "🎉 ¡Perfecto! No has fallado ninguna."
+      : ("🎯 Tienes " + wrongCount + " para repetir. Pulsa “Repetir falladas” para dominarlas.");
+
+  el("progressBar").style.width = "100%";
+  setPill("Terminado");
+  showScreen("resultsScreen");
+}
+
+function retryWrong(){
+  const wrong = Array.from(session.wrongIds);
+  const list = wrong.map(id => ({...QUESTIONS[id], id}));
+  startGame(shuffle(list));
+}
+
+function escapeHtml(s){
+  return (s || "").replace(/[&<>"']/g, (c) => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
+
+// Keyboard shortcuts A/B/C/D
+document.addEventListener("keydown", (e) => {
+  if(!session) return;
+  if(document.getElementById("quizScreen").classList.contains("hidden")) return;
+
+  const k = e.key.toLowerCase();
+  if(k === "a") chooseAnswer("A");
+  if(k === "b") chooseAnswer("B");
+  if(k === "c") chooseAnswer("C");
+  if(k === "d") chooseAnswer("D");
+});
+
+el("btnPlay").addEventListener("click", () => startGame());
+el("btnPlayFromAbout").addEventListener("click", () => startGame());
+
+el("btnOptions").addEventListener("click", () => { setupOptionsUI(); showScreen("optionsScreen"); setPill("Opciones"); });
+el("btnAbout").addEventListener("click", () => { showScreen("aboutScreen"); setPill("Ayuda"); });
+
+el("btnBackHome1").addEventListener("click", () => { showScreen("homeScreen"); setPill("Listo para jugar"); });
+el("btnBackHome2").addEventListener("click", () => { showScreen("homeScreen"); setPill("Listo para jugar"); });
+el("btnBackHome3").addEventListener("click", () => { showScreen("homeScreen"); setPill("Listo para jugar"); renderStats(); });
+
+el("btnSaveOptions").addEventListener("click", () => {
+  settings.order = el("selOrder").value;
+  settings.count = Number(el("selCount").value);
+
+  settings.timerEnabled = el("selTimerEnabled").value === "on";
+  settings.secondsPerQuestion = Math.max(5, Math.min(120, Number(el("numSeconds").value || 25)));
+
+  saveSettings();
+  setPill("Opciones guardadas");
+  setTimeout(() => setPill("Listo para jugar"), 900);
+});
+
+el("btnResetStats").addEventListener("click", () => {
+  localStorage.removeItem(LS_KEY + "_best");
+  localStorage.removeItem(LS_KEY + "_last");
+  renderStats();
+  setPill("Estadísticas borradas");
+  setTimeout(() => setPill("Opciones"), 900);
+});
+
+el("btnSkip").addEventListener("click", skipQuestion);
+el("btnQuit").addEventListener("click", () => { stopTimer(); showScreen("homeScreen"); setPill("Listo para jugar"); renderStats(); });
+
+el("btnPlayAgain").addEventListener("click", () => startGame());
+el("btnRetryWrong").addEventListener("click", () => retryWrong());
+
+// init
+renderStats();
+setPill("Listo para jugar");
+</script>
+</body>
+</html>
