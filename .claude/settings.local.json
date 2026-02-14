@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create astro:*)",
+      "Bash(npm run build:*)"
+    ]
+  }
+}
