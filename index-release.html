@@ -281,16 +281,12 @@
 
     /* photo */
     .hero-photo { position: relative; display: flex; justify-content: center; align-items: center; }
-    .hero-photo { opacity: 0; transform: scale(.92); animation: pop 1s ease forwards .4s; }
-    @keyframes pop { to { opacity: 1; transform: scale(1); } }
 
     .photo-blob {
       width: 320px; height: 380px; position: relative;
       border-radius: 62% 38% 46% 54% / 60% 44% 56% 40%;
       overflow: hidden; box-shadow: var(--shadow-md);
-      transition: border-radius .8s ease;
     }
-    .photo-blob:hover { border-radius: 40% 60% 54% 46% / 44% 60% 40% 56%; }
     .photo-blob img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .photo-placeholder {
       width: 100%; height: 100%;
@@ -300,14 +296,6 @@
     }
     .photo-placeholder svg { width: 52px; height: 52px; opacity: .35; }
 
-    /* rotating ring */
-    .photo-ring {
-      position: absolute; width: 360px; height: 420px;
-      top: 50%; left: 50%; transform: translate(-50%,-50%);
-      pointer-events: none;
-    }
-    .photo-ring svg { width: 100%; height: 100%; animation: spin 35s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* decorative number */
     .deco-num {
@@ -321,7 +309,6 @@
       .hero-sub { margin-inline: auto; }
       .hero-photo { order: -1; }
       .photo-blob { width: 240px; height: 290px; }
-      .photo-ring { width: 270px; height: 320px; }
       .dot-grid { display: none; }
       .scroll-hint { justify-content: center; }
       .deco-num { display: none; }
@@ -570,6 +557,7 @@
       <div class="lang-bar" id="langBar">
         <button class="lang-btn active" data-lang="es">ES</button>
         <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="ca">CA</button>
         <button class="lang-btn" data-lang="fr">FR</button>
         <button class="lang-btn" data-lang="pt">PT</button>
         <button class="lang-btn" data-lang="de">DE</button>
@@ -605,11 +593,6 @@
       </div>
       <div class="hero-photo">
         <div class="deco-num">01</div>
-        <div class="photo-ring">
-          <svg viewBox="0 0 360 420" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="180" cy="210" rx="170" ry="200" stroke="currentColor" stroke-width="1" stroke-dasharray="8 8" opacity=".15"/>
-          </svg>
-        </div>
         <div class="photo-blob">
           <img src="1648885274925.jpg" alt="Sigfrid Couto Fernández">
 
@@ -855,6 +838,36 @@ en: {
   'cta.fname':'Your name','cta.femail':'Your email','cta.fmsg':'Your message...','cta.send':'Send message',
   'footer':'Made with dedication',
   'marquee':'CREATIVE•PROBLEM-SOLVER•TEAMWORK•DETAIL-ORIENTED•INNOVATIVE•ADAPTABLE•PROACTIVE•SELF-TAUGHT'
+},
+ca: {
+  'nav.str':'Punts forts','nav.exp':'Experiència','nav.edu':'Estudis','nav.val':'El meu valor','nav.cta':'Contacte',
+    'skip':'Salta al contingut',
+  'hero.tag':'Benvingut al meu portafoli','hero.hi':'Hola, sóc','hero.name':'Sigfrid Couto Fernández',
+  'hero.sub':'Professional apassionat, amb mentalitat de creixement continu i ganes d\'aportar valor real a cada projecte.',
+  'hero.cta':'Contactar','hero.scroll':'Desplaça\'t per descobrir','hero.photo':'La teva foto aquí',
+  'str.tag':'Punts forts','str.title':'El que em defineix',
+  'str.1.t':'Resolució de problemes','str.1.d':'Analitzo, descomposo i trobo solucions eficients. Cada obstacle és un trencaclosques que gaudeixo resolent.',
+  'str.2.t':'Aprenentatge continu','str.2.d':'Mai deixo d\'aprendre. Em mantinc al dia amb les últimes tecnologies i busco millorar constantment.',
+  'str.3.t':'Treball en equip','str.3.d':'Comunico amb claredat, escolto activament i crec que els millors resultats neixen de la col·laboració.',
+  'str.4.t':'Atenció al detall','str.4.d':'La qualitat està en els detalls. Cuido cada aspecte del meu treball per lliurar resultats impecables.',
+  'str.5.t':'Pensament creatiu','str.5.d':'Aporto idees fresques i enfocaments innovadors. No em conformo amb el convencional si hi ha una millor manera.',
+  'str.6.t':'Adaptabilitat','str.6.d':'Em desenvolupo amb soltura en entorns canviants. Abraço els nous reptes amb entusiasme i flexibilitat.',
+  'exp.tag':'Trajectòria','exp.title':'El meu recorregut professional',
+  'exp.1.date':'2023 — Present','exp.1.role':'El teu Càrrec Actual','exp.1.company':'Nom de l\'Empresa','exp.1.desc':'Descriu aquí les teves responsabilitats principals i assoliments més destacats en aquest lloc.',
+  'exp.2.date':'2021 — 2023','exp.2.role':'El teu Càrrec Anterior','exp.2.company':'Altra Empresa','exp.2.desc':'Descriu aquí les tasques que vas realitzar i l\'impacte que vas tenir en aquesta posició.',
+  'exp.3.date':'2019 — 2021','exp.3.role':'El teu Primer Càrrec','exp.3.company':'Primera Empresa','exp.3.desc':'Descriu aquí com va començar la teva carrera i quins aprenentatges clau vas obtenir.',
+  'edu.tag':'Formació','edu.title':'Estudis i certificacions',
+  'edu.1.t':'El teu Títol Universitari','edu.1.inst':'Universitat Exemple','edu.1.date':'2015 — 2019',
+  'edu.2.t':'Certificació Rellevant','edu.2.inst':'Plataforma / Institució','edu.2.date':'2020',
+  'edu.3.t':'Un altre Curs o Formació','edu.3.inst':'Institució','edu.3.date':'2021',
+  'val.tag':'El que puc aportar',
+  'val.quote':'Aporto <span class="hl">dedicació</span>, <span class="hl">visió creativa</span> i un compromís real amb els resultats. No busco només complir — busco <span class="hl-underline">entendre el perquè</span>, sumar a l\'equip i créixer amb cada desafiament.',
+  'val.p1':'Compromís','val.p2':'Proactivitat','val.p3':'Creixement','val.p4':'Qualitat',
+  'cta.tag':'Contacte','cta.title':'Parlem?',
+  'cta.desc':'Estic buscant noves oportunitats i m\'encantaria escoltar la teva proposta. No dubtis en escriure\'m.',
+  'cta.fname':'El teu nom','cta.femail':'El teu email','cta.fmsg':'El teu missatge...','cta.send':'Enviar missatge',
+  'footer':'Fet amb dedicació',
+  'marquee':'CREATIU•RESOLUTIU•EQUIP•DETALLISTA•INNOVADOR•ADAPTABLE•PROACTIU•AUTODIDACTE'
 },
 fr: {
   'nav.str':'Points forts','nav.exp':'Expérience','nav.edu':'Formation','nav.val':'Mon apport','nav.cta':'Contact',
